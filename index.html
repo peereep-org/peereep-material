@@ -803,21 +803,23 @@
         <div class="contract-fee"><span class="badge badge-green">2.5% Fee</span></div>
         <ul class="contract-steps">
           <li>Employer posts task</li>
-          <li>Workers apply via proposal</li>
+          <li>Workers apply via proposal or direct join</li>
           <li>Employer selects & funds escrow</li>
-          <li>Worker completes</li>
+          <li>Worker completes task</li>
           <li>Employer confirms → instant payout</li>
+          <li style="color:var(--solana-green);">Optional: milestone-based payments</li>
         </ul>
       </div>
       <div class="contract-card">
         <div class="contract-type" style="color:var(--solana-purple);">SERVICE</div>
         <div class="contract-fee"><span class="badge badge-purple">2.5% Fee</span></div>
         <ul class="contract-steps">
-          <li>Employer hires from listing</li>
-          <li>Worker accepts the hire</li>
+          <li>Employer hires from service listing</li>
+          <li>Worker accepts the hire request</li>
           <li>Employer funds escrow</li>
-          <li>Worker completes milestones</li>
+          <li>Worker completes work</li>
           <li>Employer confirms → payment releases</li>
+          <li style="color:var(--solana-purple);">Optional: milestone-based payments</li>
         </ul>
       </div>
       <div class="contract-card">
@@ -836,7 +838,7 @@
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
       <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Smart contract escrow (non-custodial)</div>
       <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Instant USDC settlement on approval</div>
-      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Milestone-based payments for services</div>
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Milestone-based payments (TASK & SERVICE)</div>
       <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Dispute resolution by admin arbiters</div>
       <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Portable on-chain ratings & reviews</div>
       <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Mobile app (Capacitor + Phantom)</div>
@@ -847,32 +849,37 @@
   <div class="slide" id="slide-3">
     <div class="slide-tag">// 04 · HOW IT WORKS</div>
     <h2 class="slide-title">Non-Custodial <span class="gradient-text">Smart Contracts</span></h2>
+    <div style="display:flex;gap:12px;margin-bottom:20px;">
+      <div style="flex:1;background:var(--surface);border:1px solid rgba(0,255,163,0.15);border-radius:var(--radius);padding:12px 16px;text-align:center;font-size:13px;"><strong style="color:var(--solana-green);">TASK</strong> Employer → Worker</div>
+      <div style="flex:1;background:var(--surface);border:1px solid rgba(153,69,255,0.15);border-radius:var(--radius);padding:12px 16px;text-align:center;font-size:13px;"><strong style="color:var(--solana-purple);">SERVICE</strong> Employer → Worker</div>
+      <div style="flex:1;background:var(--surface);border:1px solid rgba(251,191,36,0.15);border-radius:var(--radius);padding:12px 16px;text-align:center;font-size:13px;"><strong style="color:#fbbf24;">GOODS</strong> Buyer → Seller</div>
+    </div>
     <div class="two-col">
       <div>
-        <div class="section-label">payment flow</div>
+        <div class="section-label">escrow flow</div>
         <div class="timeline">
           <div class="timeline-item">
             <div class="timeline-period">STEP 1</div>
             <div class="timeline-dot"></div>
             <div class="timeline-content">
-              <div class="timeline-title">Buyer Approves Contract</div>
-              <div class="timeline-detail">Payment locked in Solana smart contract. Only the buyer (to release) or seller (to receive) can access. <strong style="color:var(--solana-green);">Platform has zero access to funds.</strong></div>
+              <div class="timeline-title">Payer Funds Escrow</div>
+              <div class="timeline-detail">USDC locked in Solana smart contract. Platform has zero access to funds.</div>
             </div>
           </div>
           <div class="timeline-item">
             <div class="timeline-period">STEP 2</div>
             <div class="timeline-dot"></div>
             <div class="timeline-content">
-              <div class="timeline-title">Seller Delivers</div>
-              <div class="timeline-detail">Seller provides proof of delivery — deliverable, tracking number, or milestone completion.</div>
+              <div class="timeline-title">Provider Delivers</div>
+              <div class="timeline-detail">Worker completes task/service or seller ships goods. Milestones optional for TASK & SERVICE.</div>
             </div>
           </div>
           <div class="timeline-item">
             <div class="timeline-period">STEP 3</div>
             <div class="timeline-dot" style="border-color:var(--solana-green);"></div>
             <div class="timeline-content">
-              <div class="timeline-title">Buyer Confirms → Instant Release</div>
-              <div class="timeline-detail">Smart contract automatically releases USDC to seller. <strong style="color:var(--solana-green);">Settlement: ~3–5 seconds.</strong></div>
+              <div class="timeline-title">Payer Confirms → Instant Release</div>
+              <div class="timeline-detail">USDC released to provider in ~4 seconds.</div>
             </div>
           </div>
           <div class="timeline-item">
@@ -880,7 +887,7 @@
             <div class="timeline-dot" style="border-color:#fbbf24;"></div>
             <div class="timeline-content">
               <div class="timeline-title">Admin Arbitration</div>
-              <div class="timeline-detail">Both parties submit evidence. Admin arbitrates. Smart contract executes the decision.</div>
+              <div class="timeline-detail">Either party opens dispute. Admin reviews evidence. Smart contract executes decision.</div>
             </div>
           </div>
         </div>

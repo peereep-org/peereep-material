@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEEREEP — Pitch Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: hsl(0 0% 3.9%);
+    --surface: hsl(0 0% 6%);
+    --surface2: hsl(0 0% 10%);
+    --border: hsl(0 0% 14.9%);
+    --border-subtle: rgba(255,255,255,0.06);
+    --solana-green: #00FFA3;
+    --solana-purple: #9945FF;
+    --text: hsl(0 0% 98%);
+    --muted: hsl(0 0% 63.9%);
+    --destructive: hsl(0 84.2% 60.2%);
+    --radius: 0.75rem;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at top right, rgba(0,255,163,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom left, rgba(153,69,255,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  nav {
+    position: relative;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 32px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: rgba(10,10,10,0.7);
+    backdrop-filter: blur(20px) saturate(150%);
+    flex-shrink: 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo img {
+    height: 32px;
+    width: 32px;
+    border-radius: 8px;
+  }
+
+  .logo-text {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .slide-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .nav-btns {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .nav-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 18px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+
+  .nav-btn:hover { background: var(--surface2); border-color: var(--solana-green); color: var(--solana-green); }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .slides-viewport {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    padding: 48px 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+    overflow-y: auto;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  .slide-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--solana-green);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  h1.hero {
+    font-size: clamp(56px, 8vw, 96px);
+    line-height: 1;
+    letter-spacing: -2px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  h2.slide-title {
+    font-size: clamp(32px, 4.5vw, 48px);
+    letter-spacing: -1px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    line-height: 1.15;
+  }
+
+  .tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 32px;
+    font-weight: 400;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 40px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .meta-value {
+    font-size: 14px;
+    color: var(--solana-green);
+    font-weight: 600;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 32px;
+    background: linear-gradient(135deg, var(--solana-green), var(--solana-purple));
+    color: #000;
+    padding: 14px 28px;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 24px rgba(0,255,163,0.2);
+    width: fit-content;
+  }
+
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(0,255,163,0.3); }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover {
+    border-color: rgba(255,255,255,0.12);
+  }
+
+  .card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .card-value {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+
+  .card-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 14px;
+    color: var(--text);
+    vertical-align: middle;
+  }
+
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .td-accent { color: var(--solana-green); font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  .td-purple { color: var(--solana-purple); font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  .td-muted { color: var(--muted); }
+  .td-bold { font-weight: 600; }
+
+  tr.highlight td { background: rgba(0,255,163,0.04); }
+  tr.highlight td:first-child { border-left: 2px solid var(--solana-green); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .badge-green { background: rgba(0,255,163,0.1); color: var(--solana-green); border: 1px solid rgba(0,255,163,0.2); }
+  .badge-purple { background: rgba(153,69,255,0.1); color: var(--solana-purple); border: 1px solid rgba(153,69,255,0.2); }
+  .badge-blue { background: rgba(59,130,246,0.1); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .checklist li::before {
+    content: '✓';
+    color: var(--solana-green);
+    font-weight: 700;
+    background: rgba(0,255,163,0.1);
+    border: 1px solid rgba(0,255,163,0.2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-size: 11px;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 18px 24px;
+    min-width: 140px;
+    flex: 1;
+  }
+
+  .stat-num {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  .phase-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  .phase-box {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+
+  .phase-num {
+    font-size: 56px;
+    font-weight: 700;
+    color: rgba(0,255,163,0.1);
+    line-height: 1;
+    margin-bottom: 8px;
+    letter-spacing: -2px;
+  }
+
+  .phase-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--solana-green);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .phase-detail { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .phase-goal { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--solana-green); margin-top: 12px; font-weight: 500; }
+
+  .prog-bar {
+    background: var(--surface2);
+    height: 6px;
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+  }
+
+  .prog-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--solana-green), var(--solana-purple));
+  }
+
+  .contract-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  .contract-card {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+
+  .contract-card:hover { border-color: var(--solana-green); }
+
+  .contract-type {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+
+  .contract-fee {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+
+  .contract-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .contract-steps li {
+    font-size: 13px;
+    color: var(--muted);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .contract-steps li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--solana-green);
+    font-size: 12px;
+  }
+
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+
+  .timeline-item {
+    display: flex;
+    gap: 20px;
+    position: relative;
+  }
+
+  .timeline-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 59px;
+    top: 28px;
+    bottom: -12px;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .timeline-period {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--solana-green);
+    width: 80px;
+    flex-shrink: 0;
+    padding-top: 10px;
+    text-align: right;
+    font-weight: 500;
+  }
+
+  .timeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--solana-green);
+    background: var(--bg);
+    flex-shrink: 0;
+    margin-top: 12px;
+    z-index: 1;
+  }
+
+  .timeline-content {
+    padding: 6px 0 20px;
+  }
+
+  .timeline-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .timeline-detail { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  .risk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .risk-item {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+
+  .risk-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: #fbbf24;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .risk-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  .thesis-items { display: flex; flex-direction: column; gap: 14px; }
+
+  .thesis-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+  }
+
+  .thesis-icon {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--solana-green);
+    width: 32px;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+
+  .thesis-body { flex: 1; }
+  .thesis-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .thesis-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+  .cta-block {
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 24px;
+  }
+
+  .cta-block-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--solana-green);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+
+  .step-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+
+  .step-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--solana-green);
+    line-height: 1.2;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+
+  .offer-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .offer-list li { font-size: 14px; color: var(--text); display: flex; gap: 10px; align-items: center; }
+  .offer-list li::before { content: '◆'; color: var(--solana-green); font-size: 8px; flex-shrink: 0; }
+
+  .progress-track {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--surface);
+    z-index: 200;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--solana-green), var(--solana-purple));
+    transition: width 0.4s ease;
+  }
+
+  .dot-nav {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .dot.active { background: var(--solana-green); box-shadow: 0 0 10px rgba(0,255,163,0.4); transform: scale(1.3); }
+
+  p.body { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 14px; }
+  .text-green { color: var(--solana-green); }
+  .text-purple { color: var(--solana-purple); }
+  .text-yellow { color: #fbbf24; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  .section-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 16px; font-weight: 500; }
+
+  strong { color: var(--text); font-weight: 600; }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--solana-green) 0%, var(--solana-purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  a {
+    color: var(--solana-green);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  a:hover { opacity: 0.8; }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <img src="frontend/static/logo.png" alt="PEEREEP logo">
+    <span class="logo-text gradient-text">PEEREEP</span>
+  </div>
+  <div class="slide-counter" id="counter">01 / 14</div>
+  <div class="nav-btns">
+    <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled>← PREV</button>
+    <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">NEXT →</button>
+  </div>
+</nav>
+
+<div class="slides-viewport">
+
+  <!-- SLIDE 1: COVER -->
+  <div class="slide active" id="slide-0">
+    <div class="slide-tag">// PITCH DECK · 2026</div>
+    <h1 class="hero gradient-text">PEEREEP</h1>
+    <div class="tagline">TRUSTLESS P2P ESCROW MARKETPLACE</div>
+    <p class="body" style="max-width:560px;">Hire. Sell. Get paid instantly.</p>
+    <div style="display:flex; gap:24px; margin-top:8px; margin-bottom:24px; flex-wrap:wrap;">
+      <div style="display:flex; align-items:center; gap:6px; font-size:14px; color:var(--solana-green); font-weight:500;">
+        <span style="background:rgba(0,255,163,0.1); border:1px solid rgba(0,255,163,0.2); border-radius:4px; padding:2px 6px; font-size:11px;">%</span> Unbeatable fees
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; font-size:14px; color:var(--solana-green); font-weight:500;">
+        <span style="background:rgba(0,255,163,0.1); border:1px solid rgba(0,255,163,0.2); border-radius:4px; padding:2px 6px; font-size:11px;">⚡</span> Instant payments
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; font-size:14px; color:var(--solana-green); font-weight:500;">
+        <span style="background:rgba(0,255,163,0.1); border:1px solid rgba(0,255,163,0.2); border-radius:4px; padding:2px 6px; font-size:11px;">✓</span> No middlemen
+      </div>
+    </div>
+    <p class="body" style="max-width:560px; font-size:14px;">The blockchain-native marketplace that cuts incumbent fees by 86%.</p>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <div class="meta-label">Network</div>
+        <div class="meta-value">Solana</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Token</div>
+        <div class="meta-value">USDC</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Status</div>
+        <div class="meta-value">MVP · Devnet</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Seeking</div>
+        <div class="meta-value">$500K Seed</div>
+      </div>
+    </div>
+    <button class="cta-btn" onclick="changeSlide(1)">VIEW DECK →</button>
+  </div>
+
+  <!-- SLIDE 2: PROBLEM -->
+  <div class="slide" id="slide-1">
+    <div class="slide-tag">// 02 · THE PROBLEM</div>
+    <h2 class="slide-title">The Status <span class="gradient-text">Quo Fails</span> Workers</h2>
+    <div class="two-col">
+      <div>
+        <div class="stat-row">
+          <div class="stat"><div class="stat-num text-green">20%</div><div class="stat-label">Upwork / Fiverr Fee</div></div>
+          <div class="stat"><div class="stat-num text-green">14D</div><div class="stat-label">Payment Delay</div></div>
+          <div class="stat"><div class="stat-num text-green">1.4B</div><div class="stat-label">Unbanked Excluded</div></div>
+        </div>
+        <div class="section-label">verified 2024 data</div>
+        <table>
+          <thead>
+            <tr><th>Platform</th><th>Fee</th><th>Settlement</th><th>GMV/Rev</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="td-bold">Upwork</td><td class="td-muted">~19%</td><td class="td-muted">14+ days</td><td>$4.0B GMV</td></tr>
+            <tr><td class="td-bold">Fiverr</td><td class="td-muted">20–30%</td><td class="td-muted">14+ days</td><td>$391.5M rev</td></tr>
+            <tr><td class="td-bold">eBay</td><td class="td-muted">~15%</td><td class="td-muted">3–5 days</td><td>~$85B GMV</td></tr>
+            <tr class="highlight"><td class="td-bold">Peereep</td><td class="td-accent">2.5%</td><td class="td-accent">Instant</td><td class="td-accent">$145.9M (Y1)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="section-label">critical failures</div>
+        <ul class="checklist" style="list-style:none;">
+          <li>Settlement delays — Freelancers wait <strong>2+ weeks</strong> for payment after completing work</li>
+          <li>High fees — <strong>15–20% cuts</strong> eliminate profit margins on small contracts</li>
+          <li>Custody risk — Platforms hold funds; <strong>if they fail or freeze, you lose access</strong></li>
+          <li>Unbanked exclusion — KYC requirements <strong>cut off workers</strong> in developing regions</li>
+        </ul>
+        <div style="margin-top:24px; background:var(--surface); border:1px solid var(--border-subtle); border-radius:var(--radius); padding:24px;">
+          <div class="section-label">market opportunity</div>
+          <div style="font-size:48px; font-weight:700; letter-spacing:-1px;" class="gradient-text">$4.4B+</div>
+          <div style="font-size:14px; color:var(--muted);">Combined addressable GMV from Upwork + Fiverr alone</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: SOLUTION -->
+  <div class="slide" id="slide-2">
+    <div class="slide-tag">// 03 · THE SOLUTION</div>
+    <h2 class="slide-title">Three <span class="gradient-text">Contract</span> Types. One Platform.</h2>
+    <div class="contract-grid" style="margin-bottom:24px;">
+      <div class="contract-card">
+        <div class="contract-type text-green">TASK</div>
+        <div class="contract-fee"><span class="badge badge-green">2.5% Fee</span></div>
+        <ul class="contract-steps">
+          <li>Employer posts task</li>
+          <li>Workers apply via proposal</li>
+          <li>Employer selects & funds escrow</li>
+          <li>Worker completes</li>
+          <li>Employer confirms → instant payout</li>
+        </ul>
+      </div>
+      <div class="contract-card">
+        <div class="contract-type" style="color:var(--solana-purple);">SERVICE</div>
+        <div class="contract-fee"><span class="badge badge-purple">2.5% Fee</span></div>
+        <ul class="contract-steps">
+          <li>Employer hires from listing</li>
+          <li>Worker accepts the hire</li>
+          <li>Employer funds escrow</li>
+          <li>Worker completes milestones</li>
+          <li>Employer confirms → payment releases</li>
+        </ul>
+      </div>
+      <div class="contract-card">
+        <div class="contract-type text-yellow">GOODS</div>
+        <div class="contract-fee"><span class="badge badge-blue">1% Fee</span></div>
+        <ul class="contract-steps">
+          <li>Seller lists product</li>
+          <li>Buyer purchases immediately</li>
+          <li>Escrow created at purchase</li>
+          <li>Seller ships with tracking</li>
+          <li>Buyer confirms → instant payout</li>
+        </ul>
+      </div>
+    </div>
+    <div class="section-label">core features</div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;">
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Smart contract escrow (non-custodial)</div>
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Instant USDC settlement on approval</div>
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Milestone-based payments for services</div>
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Dispute resolution by admin arbiters</div>
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Portable on-chain ratings & reviews</div>
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;font-size:14px;color:var(--muted);"><span style="color:var(--solana-green);font-weight:700;">✓</span> Mobile app (Capacitor + Phantom)</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: HOW IT WORKS -->
+  <div class="slide" id="slide-3">
+    <div class="slide-tag">// 04 · HOW IT WORKS</div>
+    <h2 class="slide-title">Non-Custodial <span class="gradient-text">Smart Contracts</span></h2>
+    <div class="two-col">
+      <div>
+        <div class="section-label">payment flow</div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-period">STEP 1</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Buyer Approves Contract</div>
+              <div class="timeline-detail">Payment locked in Solana smart contract. Only the buyer (to release) or seller (to receive) can access. <strong style="color:var(--solana-green);">Platform has zero access to funds.</strong></div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-period">STEP 2</div>
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Seller Delivers</div>
+              <div class="timeline-detail">Seller provides proof of delivery — deliverable, tracking number, or milestone completion.</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-period">STEP 3</div>
+            <div class="timeline-dot" style="border-color:var(--solana-green);"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Buyer Confirms → Instant Release</div>
+              <div class="timeline-detail">Smart contract automatically releases USDC to seller. <strong style="color:var(--solana-green);">Settlement: ~3–5 seconds.</strong></div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-period">DISPUTE</div>
+            <div class="timeline-dot" style="border-color:#fbbf24;"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Admin Arbitration</div>
+              <div class="timeline-detail">Both parties submit evidence. Admin arbitrates. Smart contract executes the decision.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">platform cannot</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px;">
+          <div style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);border-radius:var(--radius);padding:14px 18px;font-size:14px;color:var(--muted);">✗ <span style="color:#fbbf24;">Freeze funds</span> — unlike PayPal, Stripe, or banks</div>
+          <div style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);border-radius:var(--radius);padding:14px 18px;font-size:14px;color:var(--muted);">✗ <span style="color:#fbbf24;">Charge surprise fees</span> — all fees transparent on-chain</div>
+          <div style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);border-radius:var(--radius);padding:14px 18px;font-size:14px;color:var(--muted);">✗ <span style="color:#fbbf24;">Hold payments for months</span> — settlement is instant</div>
+          <div style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);border-radius:var(--radius);padding:14px 18px;font-size:14px;color:var(--muted);">✗ <span style="color:#fbbf24;">Fail and lock customer money</span> — funds never in custody</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div class="card-label">Settlement Speed</div>
+          <div class="card-value gradient-text">~4 SEC</div>
+          <div class="card-sub">vs. 14 days on Upwork/Fiverr</div>
+          <div class="prog-bar" style="margin-top:12px;">
+            <div class="prog-fill" style="width:100%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: REVENUE MODEL -->
+  <div class="slide" id="slide-4">
+    <div class="slide-tag">// 05 · REVENUE MODEL</div>
+    <h2 class="slide-title">Unit Economics <span class="gradient-text">From Day One</span></h2>
+    <div class="two-col">
+      <div>
+        <div class="section-label">year 1 projections (conservative)</div>
+        <table>
+          <thead>
+            <tr><th>Revenue Source</th><th>Monthly Trx</th><th>Avg Fee</th><th>Monthly Rev</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>TASK fees</td><td>8,000</td><td>$25</td><td class="td-accent">$200,000</td></tr>
+            <tr><td>SERVICE fees</td><td>8,000</td><td>$2.50</td><td class="td-accent">$20,000</td></tr>
+            <tr><td>GOODS fees</td><td>160,000</td><td>$0.50</td><td class="td-accent">$80,000</td></tr>
+            <tr><td>Secret Society</td><td>4,000 subs</td><td>$1</td><td class="td-accent">$4,000</td></tr>
+            <tr class="highlight"><td class="td-bold">Total Monthly</td><td></td><td></td><td class="td-accent" style="font-size:15px;">$304,000</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="card">
+            <div class="card-label">Year 1 Revenue</div>
+            <div class="card-value text-green">$3.6M</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Year 1 Opex (5 FTE)</div>
+            <div class="card-value text-yellow">$692K</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">fee schedule</div>
+        <table style="margin-bottom:16px;">
+          <thead><tr><th>Activity</th><th>Fee</th></tr></thead>
+          <tbody>
+            <tr><td>TASK contracts</td><td class="td-accent">2.5%</td></tr>
+            <tr><td>SERVICE contracts</td><td class="td-accent">2.5%</td></tr>
+            <tr><td>GOODS contracts</td><td class="td-accent">1.0%</td></tr>
+            <tr><td>Dispute resolution</td><td class="td-accent">$0 extra</td></tr>
+            <tr><td>Listing fee</td><td class="td-accent">$0 forever</td></tr>
+          </tbody>
+        </table>
+        <div class="card" style="border-color:rgba(0,255,163,0.2);">
+          <div class="card-label">Year 1 Profit</div>
+          <div class="card-value text-green">$2.96M</div>
+          <div class="card-sub">80%+ margin · Cash-flow positive Month 1</div>
+          <div class="prog-bar" style="margin-top:8px;"><div class="prog-fill" style="width:82%;"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: TRACTION -->
+  <div class="slide" id="slide-5">
+    <div class="slide-tag">// 06 · MVP TRACTION</div>
+    <h2 class="slide-title">Working <span class="gradient-text">Now</span></h2>
+    <div class="two-col">
+      <div>
+        <div class="section-label">verified metrics</div>
+        <table>
+          <thead><tr><th>Metric</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Core escrow contracts</td><td><span class="badge badge-green">✓ 25+ txns (devnet)</span></td></tr>
+            <tr><td>Mobile app</td><td><span class="badge badge-green">✓ Android Capacitor</span></td></tr>
+            <tr><td>Wallet integration</td><td><span class="badge badge-green">✓ Phantom deep-link</span></td></tr>
+            <tr><td>Test coverage</td><td><span class="badge badge-green">✓ 95%+ (74 E2E tests)</span></td></tr>
+            <tr><td>Users</td><td><span class="badge badge-purple">50+ registered (alpha)</span></td></tr>
+            <tr><td>Smart contract</td><td><span class="badge badge-green">✓ Solana devnet</span></td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:16px; background:var(--surface); border:1px solid var(--border-subtle); border-radius:var(--radius); padding:20px;">
+          <div class="section-label">verified by</div>
+          <ul class="checklist">
+            <li>Playwright E2E tests — 74 tests, all passing (public GitHub)</li>
+            <li>Manual user testing in Uganda, Pakistan, Vietnam</li>
+            <li>Live transaction tracking (Solana Explorer)</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">tech stack</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+          <div class="card"><div class="card-label">Backend</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);margin-top:6px;font-weight:500;">Spring Boot</div></div>
+          <div class="card"><div class="card-label">Frontend</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);margin-top:6px;font-weight:500;">SvelteKit</div></div>
+          <div class="card"><div class="card-label">Mobile</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);margin-top:6px;font-weight:500;">Capacitor</div></div>
+          <div class="card"><div class="card-label">Smart Contract</div><div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);margin-top:6px;font-weight:500;">Anchor / Solana</div></div>
+        </div>
+        <div class="card" style="border-color:rgba(153,69,255,0.2);">
+          <div class="card-label">Market Tested In</div>
+          <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+            <span class="badge badge-purple">🇺🇬 Uganda</span>
+            <span class="badge badge-purple">🇵🇰 Pakistan</span>
+            <span class="badge badge-purple">🇻🇳 Vietnam</span>
+          </div>
+          <div style="font-size:13px;color:var(--muted);margin-top:12px;">Targeting unbanked emerging markets excluded by Upwork/Fiverr KYC walls.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: GO-TO-MARKET -->
+  <div class="slide" id="slide-6">
+    <div class="slide-tag">// 07 · GO-TO-MARKET</div>
+    <h2 class="slide-title">Phased <span class="gradient-text">Expansion</span> Strategy</h2>
+    <div class="phase-grid">
+      <div class="phase-box">
+        <div class="phase-num">1</div>
+        <div class="phase-title">Months 1–3 · Proof of Concept</div>
+        <div class="phase-detail">Target: Solana developers, designers, auditors (crypto-native)<br><br>Channels: Discord, Twitter, GitHub communities</div>
+        <div class="phase-goal">→ 100 DAU · $500K GMV</div>
+        <div class="prog-bar" style="margin-top:12px;"><div class="prog-fill" style="width:100%;"></div></div>
+      </div>
+      <div class="phase-box">
+        <div class="phase-num">2</div>
+        <div class="phase-title">Months 4–9 · Regional Expansion</div>
+        <div class="phase-detail">Target: SEA, Latin America, Africa — 1.4B unbanked workers<br><br>Channels: Referral program, local influencers</div>
+        <div class="phase-goal">→ 5,000 DAU · $5M GMV</div>
+        <div class="prog-bar" style="margin-top:12px;"><div class="prog-fill" style="width:66%;"></div></div>
+      </div>
+      <div class="phase-box">
+        <div class="phase-num">3</div>
+        <div class="phase-title">Months 10+ · Mainstream</div>
+        <div class="phase-detail">Target: North America, Europe — fee-fatigued professionals<br><br>Channels: Content marketing, partnerships</div>
+        <div class="phase-goal">→ 50,000 DAU · $20M+ GMV</div>
+        <div class="prog-bar" style="margin-top:12px;"><div class="prog-fill" style="width:33%;"></div></div>
+      </div>
+    </div>
+    <div style="margin-top:24px; background:var(--surface); border:1px solid var(--border-subtle); border-radius:var(--radius); padding:24px;">
+      <div class="section-label">why emerging markets first</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+        <div style="font-size:14px;color:var(--muted);"><strong style="color:var(--text);display:block;margin-bottom:6px;">Lower CAC</strong>Crypto-native users require less education and onboarding effort</div>
+        <div style="font-size:14px;color:var(--muted);"><strong style="color:var(--text);display:block;margin-bottom:6px;">No incumbent</strong>Upwork/Fiverr KYC walls lock out 1.4B potential workers — zero competition</div>
+        <div style="font-size:14px;color:var(--muted);"><strong style="color:var(--text);display:block;margin-bottom:6px;">USDC adoption</strong>USDC provides USD-stable income in volatile-currency markets</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: COMPETITIVE -->
+  <div class="slide" id="slide-7">
+    <div class="slide-tag">// 08 · COMPETITIVE POSITION</div>
+    <h2 class="slide-title">86% Fee <span class="gradient-text">Advantage</span></h2>
+    <div class="two-col">
+      <div>
+        <div class="section-label">head-to-head comparison</div>
+        <table>
+          <thead><tr><th>Factor</th><th>Peereep</th><th>Fiverr</th><th>Upwork</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Fee</td>
+              <td class="td-accent">2.5%</td>
+              <td class="td-muted">20–30%</td>
+              <td class="td-muted">19%</td>
+            </tr>
+            <tr>
+              <td>Settlement</td>
+              <td class="td-accent">Instant</td>
+              <td class="td-muted">14 days</td>
+              <td class="td-muted">14 days</td>
+            </tr>
+            <tr>
+              <td>Custody</td>
+              <td class="td-accent">Smart contract</td>
+              <td class="td-muted">Centralized</td>
+              <td class="td-muted">Centralized</td>
+            </tr>
+            <tr>
+              <td>Global reach</td>
+              <td class="td-accent">195+ countries</td>
+              <td class="td-muted">KYC-gated</td>
+              <td class="td-muted">KYC-gated</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="section-label">moat analysis</div>
+        <div class="thesis-items">
+          <div class="thesis-row">
+            <div class="thesis-icon">01</div>
+            <div class="thesis-body">
+              <div class="thesis-title">Cost Moat</div>
+              <div class="thesis-desc">2.5% vs 20% = 8× cheaper than incumbents. Workers keep ~$1,750 more per $2,000 contract.</div>
+            </div>
+          </div>
+          <div class="thesis-row">
+            <div class="thesis-icon">02</div>
+            <div class="thesis-body">
+              <div class="thesis-title">Speed Moat</div>
+              <div class="thesis-desc">Instant settlement vs 14-day delays. Cash flow advantage for freelancers in low-income markets.</div>
+            </div>
+          </div>
+          <div class="thesis-row">
+            <div class="thesis-icon">03</div>
+            <div class="thesis-body">
+              <div class="thesis-title">Reputation Moat</div>
+              <div class="thesis-desc">Portable on-chain reviews. Reputation stays with the worker, not locked on Upwork/Fiverr.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: FINANCIALS -->
+  <div class="slide" id="slide-8">
+    <div class="slide-tag">// 09 · FINANCIAL PROJECTIONS</div>
+    <h2 class="slide-title">Year 1–3 <span class="gradient-text">Growth Path</span></h2>
+    <div class="three-col" style="margin-bottom:24px;">
+      <div class="card" style="border-color:rgba(0,255,163,0.2);">
+        <div class="card-label">Year 1 GMV</div>
+        <div class="card-value text-green">$146M</div>
+        <div class="card-sub">$3.6M revenue · $2.96M profit</div>
+        <div style="margin-top:10px;"><span class="badge badge-green">Cash+ Month 1</span></div>
+      </div>
+      <div class="card" style="border-color:rgba(153,69,255,0.2);">
+        <div class="card-label">Year 2 GMV</div>
+        <div class="card-value" style="color:var(--solana-purple);">$500M</div>
+        <div class="card-sub">$12.5M revenue · $11.3M profit</div>
+        <div style="margin-top:10px;"><span class="badge badge-purple">Series A Optional</span></div>
+      </div>
+      <div class="card" style="border-color:rgba(0,255,163,0.2);">
+        <div class="card-label">Year 3 GMV</div>
+        <div class="card-value text-green">$1.2B</div>
+        <div class="card-sub">$30M revenue · $28M profit</div>
+        <div style="margin-top:10px;"><span class="badge badge-green">Market Leader</span></div>
+      </div>
+    </div>
+    <div class="section-label">key assumptions</div>
+    <table>
+      <thead><tr><th>Year</th><th>GMV</th><th>Revenue</th><th>Opex</th><th>Profit</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr class="highlight">
+          <td class="td-bold">Year 1</td>
+          <td>$145.9M</td>
+          <td class="td-accent">$3.6M</td>
+          <td class="td-muted">$0.7M</td>
+          <td class="td-accent">$2.96M</td>
+          <td><span class="badge badge-green">Break-even M1</span></td>
+        </tr>
+        <tr>
+          <td class="td-bold">Year 2</td>
+          <td>$500M</td>
+          <td class="td-accent">$12.5M</td>
+          <td class="td-muted">$1.2M</td>
+          <td class="td-accent">$11.3M</td>
+          <td><span class="badge badge-purple">Hyper-growth</span></td>
+        </tr>
+        <tr>
+          <td class="td-bold">Year 3</td>
+          <td>$1.2B</td>
+          <td class="td-accent">$30M</td>
+          <td class="td-muted">$2M</td>
+          <td class="td-accent">$28M</td>
+          <td><span class="badge badge-green">Leader</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="body" style="margin-top:16px; font-size:13px;">Based on 5 FTE team. Transaction volume growth 10–50× by Year 3. 2–5% monthly churn (emerging market typical).</p>
+  </div>
+
+  <!-- SLIDE 10: USE OF FUNDS -->
+  <div class="slide" id="slide-9">
+    <div class="slide-tag">// 10 · USE OF FUNDS</div>
+    <h2 class="slide-title">$500K Seed <span class="gradient-text">Allocation</span></h2>
+    <div class="two-col">
+      <div>
+        <div class="section-label">optional seed round</div>
+        <table>
+          <thead><tr><th>Area</th><th>Budget</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-purple">Product</span></td>
+              <td class="td-purple">$200K</td>
+              <td class="td-muted" style="font-size:13px;">iOS app; DAO governance; multi-chain</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-green">Growth</span></td>
+              <td class="td-accent">$200K</td>
+              <td class="td-muted" style="font-size:13px;">Regional expansion SEA, LATAM, Africa</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-blue">Operations</span></td>
+              <td class="td-accent">$100K</td>
+              <td class="td-muted" style="font-size:13px;">Legal entity setup (3–5 regions)</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top:16px; background:var(--surface); border:1px solid rgba(0,255,163,0.2); border-radius:var(--radius); padding:20px;">
+          <div class="card-label">Key Point</div>
+          <p style="font-size:14px; color:var(--muted); line-height:1.6; margin-top:8px;">With <strong style="color:var(--solana-green);">$2.96M Year 1 profit</strong>, external funding is entirely optional. Peereep can self-fund all growth from Day 1 cash flow.</p>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">funding terms</div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="card">
+            <div class="card-label">Valuation</div>
+            <div style="font-size:36px;font-weight:700;letter-spacing:-1px;" class="gradient-text">$2–3M</div>
+            <div style="font-size:13px;color:var(--muted);">Post-money · Founder-friendly</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Instrument</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--text);margin-top:6px;font-weight:500;">SAFT Terms</div>
+            <div style="font-size:13px;color:var(--muted);">Optional board seat for lead investor</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Exposure</div>
+            <div style="font-size:36px;font-weight:700;letter-spacing:-1px;" class="text-green">$10B+</div>
+            <div style="font-size:13px;color:var(--muted);">Global escrow market opportunity</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11: WHY NOW -->
+  <div class="slide" id="slide-10">
+    <div class="slide-tag">// 11 · WHY NOW</div>
+    <h2 class="slide-title">Five <span class="gradient-text">Verifiable</span> Tailwinds</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="card">
+        <div class="card-label">01 · Blockchain Maturity</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;margin-top:10px;">Solana: <strong style="color:var(--text);">50K+ Tx/s</strong> production-grade throughput. USDC: <strong style="color:var(--text);">$30B+ supply</strong> SEC-compliant stablecoin. Infrastructure is ready.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">02 · Incumbent Market Size (Verified)</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;margin-top:10px;">Upwork 2024: <strong style="color:var(--text);">$4.0B GMV</strong> · Fiverr 2024: <strong style="color:var(--text);">$391.5M rev</strong>. Combined $4.4B+ from public filings. Peereep Y1 = only 3.3% of that.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">03 · Fee Fatigue (Verified)</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;margin-top:10px;">Upwork 19% · Fiverr 20–30% · eBay 15% · Amazon 17%. Peereep's <strong style="color:var(--solana-green);">2.5% saves workers 86%</strong> in platform taxes.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">04 · Regulatory Clarity</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;margin-top:10px;">USDC is SEC-compliant. Peer-to-peer marketplace does <strong style="color:var(--text);">NOT require money transmission license</strong>. No custody = simplified compliance.</div>
+      </div>
+      <div class="card" style="grid-column:span 2;">
+        <div class="card-label">05 · Unbanked Opportunity</div>
+        <div style="font-size:14px;color:var(--muted);line-height:1.6;margin-top:10px;"><strong style="color:var(--text);">1.4 billion workers</strong> are excluded from Fiverr and Upwork by KYC requirements. USDC + Solana provides USD-stable income to anyone with a smartphone — no bank account needed.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12: TEAM -->
+  <div class="slide" id="slide-11">
+    <div class="slide-tag">// 12 · TEAM</div>
+    <h2 class="slide-title">The <span class="gradient-text">Founders</span></h2>
+    <div class="two-col" style="margin-bottom:24px;">
+      <div class="card" style="border-color:rgba(0,255,163,0.2);">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--solana-green),var(--solana-purple));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;letter-spacing:1px;flex-shrink:0;color:#000;">GR</div>
+          <div>
+            <div style="font-size:15px;color:var(--text);font-weight:600;">Ghiffary Rifqialdi</div>
+            <div class="card-label" style="margin-bottom:10px;">CEO · CTO · Founder</div>
+            <div style="font-size:14px;color:var(--muted);line-height:1.6;">Founded and built from scratch. Full-stack engineer (Spring Boot + SvelteKit + Capacitor). Smart contract initiator on Anchor. Acting as CTO overseeing architecture and technical direction.</div>
+            <div style="margin-top:12px;"><a href="https://github.com/ghiffaryr" style="font-family:'JetBrains Mono',monospace;font-size:12px;text-decoration:none;letter-spacing:0.5px;">@ghiffaryr ↗</a></div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(153,69,255,0.2);">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--solana-purple),var(--solana-green));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;letter-spacing:1px;flex-shrink:0;color:#000;">RE</div>
+          <div>
+            <div style="font-size:15px;color:var(--text);font-weight:600;">Renard Elyon Imawanto</div>
+            <div class="card-label" style="margin-bottom:10px;">Lead Blockchain Engineer</div>
+            <div style="font-size:14px;color:var(--muted);line-height:1.6;">Supports development, code optimization, and security. Smart contract optimization and security assurance. Product reliability.</div>
+            <div style="margin-top:12px;"><a href="https://github.com/renardelyon" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--solana-purple);text-decoration:none;letter-spacing:0.5px;">@renardelyon ↗</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-label">5-person operational team</div>
+    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px;">
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;text-align:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--solana-green);margin-bottom:6px;font-weight:500;">CEO · CTO</div>
+        <div style="font-size:13px;color:var(--muted);">Founder + Full-Stack</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;text-align:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--solana-green);margin-bottom:6px;font-weight:500;">LEAD BLOCKCHAIN ENG</div>
+        <div style="font-size:13px;color:var(--muted);">Blockchain + Security</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;text-align:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--solana-green);margin-bottom:6px;font-weight:500;">BLOCKCHAIN ENG</div>
+        <div style="font-size:13px;color:var(--muted);">Smart Contract Ops</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;text-align:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--solana-green);margin-bottom:6px;font-weight:500;">VIDEO EDITOR</div>
+        <div style="font-size:13px;color:var(--muted);">Content Production</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border-subtle);border-radius:var(--radius);padding:16px;text-align:center;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--solana-green);margin-bottom:6px;font-weight:500;">GROWTH LEAD</div>
+        <div style="font-size:13px;color:var(--muted);">User Acquisition</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13: RISKS -->
+  <div class="slide" id="slide-12">
+    <div class="slide-tag">// 13 · RISK MITIGATION</div>
+    <h2 class="slide-title">Risk <span class="gradient-text">Addressed</span></h2>
+    <div class="risk-grid">
+      <div class="risk-item">
+        <div class="risk-label">⚠ Smart Contract Exploit</div>
+        <div class="risk-text">Anchor framework (production-proven). Roadmap: external audit by Certora or Areta (Subsidy Program). Active bug bounty program planned.</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-label">⚠ Regulatory Pressure</div>
+        <div class="risk-text">Peer-to-peer model avoids money transmission license in most jurisdictions. USDC is SEC-compliant. Regional legal review per market.</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-label">⚠ User Adoption</div>
+        <div class="risk-text">Start with crypto-native segment (lower CAC). Referral incentives. Portable on-chain reputation creates switching cost from Day 1.</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-label">⚠ Solana Network Risk</div>
+        <div class="risk-text">Multi-chain roadmap if needed (Polygon, Arbitrum). Current Solana fees + speed justify single-chain decision today.</div>
+      </div>
+      <div class="risk-item" style="grid-column:span 2;">
+        <div class="risk-label">⚠ Churn & Retention</div>
+        <div class="risk-text">Milestone features + on-chain reviews create high switching costs. Dispute resolution builds trust network effects. Community flywheel accelerates retention over time.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14: CTA -->
+  <div class="slide" id="slide-13">
+    <div class="slide-tag">// 14 · CALL TO ACTION</div>
+    <h2 class="slide-title">Join The <span class="gradient-text">Future of Work</span></h2>
+    <div class="cta-grid">
+      <div>
+        <div class="cta-block">
+          <div class="cta-block-title">Next Steps</div>
+          <ol class="step-list">
+            <li><div class="step-num">1</div><div>Live demo — 10 min, submit a real USDC transaction on devnet</div></li>
+            <li><div class="step-num">2</div><div>Technical Q&A — smart contract review, architecture deep-dive</div></li>
+            <li><div class="step-num">3</div><div>Due diligence — code review, financials, legal</div></li>
+            <li><div class="step-num">4</div><div>Term sheet — 1–2 week close</div></li>
+          </ol>
+        </div>
+        <div class="cta-block" style="margin-top:16px;">
+          <div class="cta-block-title">Offer</div>
+          <ul class="offer-list">
+            <li>SAFT terms</li>
+            <li>Optional board seat for lead investor</li>
+            <li>Exposure to $10B+ global escrow market</li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="card" style="border-color:rgba(0,255,163,0.2);">
+            <div class="card-label">Seeking</div>
+            <div class="card-value text-green">$500K</div>
+            <div class="card-sub">Seed Round</div>
+          </div>
+          <div class="card" style="border-color:rgba(153,69,255,0.2);">
+            <div class="card-label">Valuation</div>
+            <div class="card-value" style="color:var(--solana-purple);">$2–3M</div>
+            <div class="card-sub">Post-money · Founder-friendly</div>
+          </div>
+          <div class="card">
+            <div class="card-label">Contact</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);margin-top:8px;font-weight:500;">Ghiffary Rifqialdi</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--solana-green);margin-top:6px;">peereep.com</div>
+          </div>
+        </div>
+        <div style="margin-top:16px; background:linear-gradient(135deg,rgba(0,255,163,0.08),rgba(153,69,255,0.08)); border:1px solid rgba(0,255,163,0.15); border-radius:var(--radius); padding:20px; text-align:center;">
+          <div style="font-size:16px;font-weight:700;letter-spacing:1px;color:var(--text);">OPTIONAL FUNDING. PROFITABLE DAY ONE.</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:8px;">$2.96M Year 1 profit with a 5-person team.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Progress bar -->
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- Dot nav -->
+<nav class="dot-nav" id="dotNav"></nav>
+
+<script>
+  const TOTAL = 14;
+  let current = 0;
+
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const counter = document.getElementById('counter');
+  const progressFill = document.getElementById('progressFill');
+  const dotNav = document.getElementById('dotNav');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  // Build dot nav
+  for (let i = 0; i < TOTAL; i++) {
+    const dot = document.createElement('button');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.title = `Slide ${i+1}`;
+    dot.onclick = () => goTo(i);
+    dotNav.appendChild(dot);
+  }
+
+  function goTo(idx) {
+    if (idx < 0 || idx >= TOTAL) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('exit');
+    setTimeout(() => slides[current].classList.remove('exit'), 400);
+    current = idx;
+    slides[current].classList.add('active');
+    updateUI();
+  }
+
+  function changeSlide(dir) { goTo(current + dir); }
+
+  function updateUI() {
+    counter.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(TOTAL).padStart(2, '0');
+    progressFill.style.width = ((current + 1) / TOTAL * 100) + '%';
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === TOTAL - 1;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
+
+  updateUI();
+</script>
+</body>
+</html>
